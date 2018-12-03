@@ -11,10 +11,15 @@ import UIKit
 class ToDoListController: UITableViewController {
     
     var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
+    
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+        }
         
     }
     
@@ -41,11 +46,15 @@ class ToDoListController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
         
+        
+        
         if  tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
+            
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
             
         } else {
 
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
             
         }
         
@@ -64,6 +73,8 @@ class ToDoListController: UITableViewController {
             //what will happen once theuser clicks the add item
             
             self.itemArray.append(textField.text!)
+            
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
             
             self.tableView.reloadData()
             }
